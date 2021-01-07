@@ -92,10 +92,10 @@ code: https://github.com/moonlight8978/aws-cda-preparation/tree/beanstalk
     EnvironmentName: exapro-prod+
     SolutionStack: Ruby
     EnvironmentLinks:
-    	"WORKERQUEUE": "worker+"
+      "WORKERQUEUE": "worker+"
     OptionSettings:
-    	aws:elb:loadbalancer:
-    		CrossZone: true
+      aws:elb:loadbalancer:
+        CrossZone: true
     ```
 
   - `+` in name will enable groups
@@ -108,27 +108,27 @@ code: https://github.com/moonlight8978/aws-cda-preparation/tree/beanstalk
 
     ```yml
     packages:
-    	yum:
-    		libmemcached: []
-    		ruby-devel: []
+      yum:
+        libmemcached: []
+        ruby-devel: []
     ```
 
   - Groups: Create unix group, assign group id
 
     ```yml
     groups:
-    	groupAdmin: {}
-    	groupDev:
-    		gid: "12"
+      groupAdmin: {}
+      groupDev:
+        gid: "12"
     ```
 
   - Users: Create unix user
 
     ```yml
     users:
-    	andrew:
-    		groups:
-    			- groupAdmin
+      andrew:
+        groups:
+          - groupAdmin
         uid: 87
         homeDir: "/andrew"
     ```
@@ -137,46 +137,46 @@ code: https://github.com/moonlight8978/aws-cda-preparation/tree/beanstalk
 
     ```yml
     files:
-    	"/home/ec2-user/application.yml":
-    		mode: '000755'
-    		owner: root
-    		group: root
-    		content: |
-    			SECRET: 000destruct0
+      "/home/ec2-user/application.yml":
+        mode: "000755"
+        owner: root
+        group: root
+        content: |
+          SECRET: 000destruct0
     ```
 
   - Execute commends before app is setup
 
     ```yml
     commands:
-    	1_project_root:
-    		command: mkdir /var/www/app
-    	2_link:
-    		command: ln -s /var/www/app /app
+      1_project_root:
+        command: mkdir /var/www/app
+      2_link:
+        command: ln -s /var/www/app /app
     ```
 
   - Services: which services should start/stop when the instance launch
 
     ```yml
     services:
-    	sysvinit:
-    		nginx:
-    			enabled: true
-    			ensureRunning: true
+      sysvinit:
+        nginx:
+          enabled: true
+          ensureRunning: true
     ```
 
   - Container commands: execute commands that affect the app source code
 
     ```yml
     container_commands:
-    	0_collectstatic:
-    		command: "django-admin.py collectstatic --noinput"
-    	1_syncdb:
-    		command: "django-admin.py syncdb --noinput"
-    		leader_only: true
-    	2_migrate:
-    		command: "django-admin.py migrate"
-    		leader_only: true
+      0_collectstatic:
+        command: "django-admin.py collectstatic --noinput"
+      1_syncdb:
+        command: "django-admin.py syncdb --noinput"
+        leader_only: true
+      2_migrate:
+        command: "django-admin.py migrate"
+        leader_only: true
     ```
 
 * Custom Image: use custom AMIs instead of AWS preconfigured images => improve provisioning times
