@@ -1,5 +1,6 @@
 ---
-source code: /tree/mysql/optimization/query-1
+title: Optimize WHERE clause
+code: https://github.com/moonlight8978/notes/tree/mysql/optimization/query-1
 ---
 
 # MySQL Optimization

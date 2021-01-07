@@ -1,6 +1,6 @@
 ---
 title: MySQL Subquery optimization
-code: /tree/mysql/optimization/subquery
+code: https://github.com/moonlight8978/notes/tree/mysql/optimization/subquery
 ---
 
 # Optimize Subquery với Semijoin transformation
