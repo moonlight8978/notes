@@ -1,0 +1,27 @@
+version: "3.7"
+services:
+  web:
+    build: .
+    command: rails s -b 0.0.0.0
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 60000:3000
+    tty: true
+    stdin_open: true
+    depends_on:
+      - mysql
+    environment:
+      RAILS_MASTER_KEY: e9260acfe73e0552c498b92381f32fe2
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - ./tmp/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1221
+  adminer:
+    image: adminer:4.7.1
+    ports:
+      - 60080:8080
+    depends_on:
+      - mysql
