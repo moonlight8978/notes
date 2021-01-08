@@ -1,0 +1,83 @@
+version: '3.8'
+services:
+  web:
+    build:
+      context: .
+      target: development
+    restart: always
+    command: rails s -b 0.0.0.0
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/app
+      - type: tmpfs
+        target: /app/tmp/pids/
+    tty: true
+    stdin_open: true
+    depends_on:
+      - db
+      - public
+    env_file: .env
+    environment:
+      RAILS_ENV: development
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+
+  web-production:
+    build:
+      context: .
+      target: production
+      args:
+        RAILS_ENV: production
+        RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+    restart: always
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    env_file: .env
+    environment:
+      RAILS_ENV: production
+      RAILS_SERVE_STATIC_FILES: 1
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+
+  postgres:
+    image: postgres:11.5-alpine
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    restart: always
+
+  mysql:
+    image: mysql:5.7.32
+    volumes:
+      - db-data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+
+  public:
+    build:
+      context: .
+      target: development
+    command: bin/webpack-dev-server -b 0.0.0.0
+    ports:
+      - 3035:3035
+    volumes:
+      - .:/app
+
+  cache:
+    image: redis:5.0.6-alpine3.10
+    volumes:
+      - cache-data:/data
+    restart: always
+
+volumes:
+  db-data:
+  cache-data:
