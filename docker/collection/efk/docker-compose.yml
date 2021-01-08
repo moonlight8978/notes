@@ -1,0 +1,47 @@
+version: "3.8"
+services:
+  # app:
+  #   logging:
+  #     driver: fluentd
+  #     options:
+  #       tag: app.rails.test-docker
+  #       fluentd-address: localhost:24224
+
+  kibana:
+    image: kibana:7.10.1
+    ports:
+      - 5601:5601
+    restart: always
+    environment:
+      elasticsearch.hosts: http://elasticsearch:9200
+    depends_on:
+      - fluentd
+
+  fluentd:
+    build:
+      context: .
+      dockerfile: fluentd.Dockerfile
+    volumes:
+      - ./fluentd/conf:/fluentd/etc
+      - fluentd-log:/var/log/fluentd
+    ports:
+      - 24224:24224
+      - 24224:24224/udp
+    depends_on:
+      - elasticsearch
+    restart: always
+
+  elasticsearch:
+    image: elasticsearch:7.10.1
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      discovery.type: single-node
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    restart: always
+
+volumes:
+  es-data:
+  fluentd-log:
