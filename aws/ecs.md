@@ -63,3 +63,19 @@ code: N/A
 
 - Resource reservation
 - Pay at least 1 minute, and every additional second
+
+- EC2 Practical notes:
+  - When create EC2 ECS Cluster, AWS will create a CloudFormation stack
+  - Container instance that run the ECS container agent will requires ecsInstanceRole (ECS, EC2, ECR, CloudWatch)
+  - Login to ECR:
+    ```bash
+    aws ecr get-login-password | docker login --username AWS --password-stdin <repo_link>
+    ```
+  - Sensitive env variables can be stored at Parameter Store, ECS will inject those vars to container at runtime
+  - Command is comma seperated `yarn,start`
+
+# TODO
+
+- Replica mode (multiple containers) vs Daemon mode (auto replicas)
+
+- Load balancer in ECS
