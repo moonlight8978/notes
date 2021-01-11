@@ -61,10 +61,14 @@ code: N/A
 
   ![](https://images.viblo.asia/a488d4d1-8e48-46c8-97ea-aa7be004a726.png)
 
+  * Replicas
+
 - Resource reservation
+
 - Pay at least 1 minute, and every additional second
 
 - EC2 Practical notes:
+
   - When create EC2 ECS Cluster, AWS will create a CloudFormation stack
   - Container instance that run the ECS container agent will requires ecsInstanceRole (ECS, EC2, ECR, CloudWatch)
   - Login to ECR:
@@ -74,8 +78,13 @@ code: N/A
   - Sensitive env variables can be stored at Parameter Store, ECS will inject those vars to container at runtime
   - Command is comma seperated `yarn,start`
 
+- EC2 with ALB practical notes:
+
+  - 1 service - 1 target group
+  - Target group used for ECS should have 0 associated instances because ECS will assign instances automatically when service starts
+  - In task definition, keep Host port blank will tell ECS to map Host port automatically (random), and those ports will be mapped to target group instances
+  - Delete ECS service will not delete ALB resources
+
 # TODO
 
 - Replica mode (multiple containers) vs Daemon mode (auto replicas)
-
-- Load balancer in ECS
