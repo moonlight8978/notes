@@ -1,28 +1,46 @@
+x-web-development: &web-development
+  build:
+    context: webapp
+    target: development
+  restart: always
+  env_file: .env
+  volumes:
+    - ./webapp:/app
+    - type: tmpfs
+      target: /app/tmp/pids/
+  environment:
+    RAILS_ENV: development
+
 version: '3.8'
 services:
   web:
-    build:
-      context: .
-      target: development
-    restart: always
+    <<: *web-development
     command: rails s -b 0.0.0.0
     ports:
       - 3000:3000
-    volumes:
-      - .:/app
-      - type: tmpfs
-        target: /app/tmp/pids/
     tty: true
     stdin_open: true
     depends_on:
       - db
       - public
-    env_file: .env
-    environment:
-      RAILS_ENV: development
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: ${DB_HOST}
+    # labels:
+    #   - "traefik.http.routers.web.rule=Host(`some.host`)"
+    #   - "traefik.http.routers.web.service=webapp"
+    #   - "traefik.http.services.webapp.loadbalancer.server.port=3000"
+
+  proxy:
+    image: traefik:v2.4.0-rc2
+    command: --api.insecure=true --providers.docker
+    ports:
+      - 80:80
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - web-production
+    labels:
+      # echo $(htpasswd -nb user password) | sed -e s/\\$/\\$\\$/g
+      - "traefik.http.middlewares.webauth.basicauth.users=admin:$$xxx"
 
   web-production:
     build:
@@ -44,6 +62,11 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: ${DB_HOST}
       RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+    labels:
+      - "traefik.http.routers.web.rule=Host(`some.host`)"
+      - "traefik.http.routers.web.middlewares=webauth@docker"
+      - "traefik.http.routers.web.service=webapp"
+      - "traefik.http.services.webapp.loadbalancer.server.port=3000"
 
   postgres:
     image: postgres:11.5-alpine
@@ -63,14 +86,14 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
 
   public:
-    build:
-      context: .
-      target: development
-    command: bin/webpack-dev-server -b 0.0.0.0
+    <<: *web-development
+    command: ./bin/webpack-dev-server
     ports:
       - 3035:3035
-    volumes:
-      - .:/app
+    # labels:
+    #   - "traefik.http.routers.assets.rule=Host(`some.host`)"
+    #   - "traefik.http.routers.assets.service=assets"
+    #   - "traefik.http.services.assets.loadbalancer.server.port=3035"
 
   cache:
     image: redis:5.0.6-alpine3.10

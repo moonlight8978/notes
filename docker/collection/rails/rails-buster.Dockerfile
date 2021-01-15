@@ -62,8 +62,17 @@ RUN RAILS_ENV=${RAILS_ENV} RAILS_MASTER_KEY=${RAILS_MASTER_KEY} rails assets:pre
 FROM production-base as production
 
 COPY . .
-COPY --from=assets-builder /app/public /app/public
 
 RUN mkdir -p tmp/pids tmp/sockets
 
 CMD ["bundle", "exec", "puma"]
+
+FROM nginx:1.19.6-alpine
+
+WORKDIR /app
+
+COPY conf.d /etc/nginx/conf.d
+
+COPY --from=assets-builder /app/public /app
+
+CMD ["nginx", "-g", "daemon off;"]
