@@ -126,5 +126,16 @@ Apply X-Ray to monitor the app
 * Fault: 500/5XX errors
 * Throttle: 429 Too Many Requests
 
+# Practical notes
 
+* XRay SDK Ruby: 
 
+  * Custom daemon address: https://github.com/aws/aws-xray-sdk-ruby/issues/25
+
+  * Install XRay: https://docs.aws.amazon.com/xray/latest/devguide/xray-daemon-ec2.html
+
+  * Service: `sudo service xray status`
+
+  * One-off tasks like `db:create`, `db:migrate` will throw error `XRay::ContextMissingError: Can not find any active segment or subsegment.`
+
+    => Add `context_missing: 'LOG_ERROR'` to XRay configuration
