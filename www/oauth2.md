@@ -72,3 +72,4 @@ code: TODO
 * Client add `state` parameter to `/authorize` request
   * Authorization returns `code` with `state`
   * Client check if `state` matches old generated one, then send request to authorization server
+
