@@ -8,9 +8,12 @@
 | Refactoring                  | 10%  | 6.5       |
 | Monitoring & troubleshooting | 12%  | 7.8       |
 
-# Need to investigate
+# TODO
 
 - Service-linked role
+- DynamoDB practical note
+- Parameter Store Code
+- KMS & rails integration
 
 # Links
 

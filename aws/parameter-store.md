@@ -25,6 +25,7 @@ code: N/A
   * String
   * StringList: seperated by comma
   * SecureString: Encrypted by KMS
+    * User must have KMS decrypt permission to read decrypted value
 * No auto rotation
 
 #### Parameter Policy

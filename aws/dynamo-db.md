@@ -1,7 +1,5 @@
----
 title: DynamoDB
 code: N/A
----
 
 #### Overview
 
@@ -11,6 +9,8 @@ code: N/A
   - Write capacity: WCU
 
 * All data is stored on SSD storage and is spread across 3 different AZs
+* No limit when set to On-Demand mode, can be switched to Provisioned, and vice-versa mode every 24 hour
+* Concept: Items (Rows) and Attributes (Columns)
 
 #### Read consistency
 
@@ -21,12 +21,13 @@ code: N/A
 * When data is updated, it is possible to read and return an inconsistent copy
 
 * Read is fast but there is no guarantee of consistent
-* Time taken by data to be consistent is about 1 second
+* Copies of data will be generally consistent after 1 second
 
 ###### Strongly Consistent Reads
 
 * When data is being updated, it will not return until all copies are consistent
 * Guarantee of consistent, but high latency (slower)
+* Copies of data will be consistent with a guarantee of 1 second
 
 #### DynamoDB Partitions
 
@@ -38,6 +39,14 @@ code: N/A
 * 2 cases when a partition will be created
   * Every 10GB of data
   * RCUs (3000) or WCUs (1000) is exceed for a single partition
+  * When DynamoDB sees a pattern of a hot partition, it will split the partition to fix the issue
+
+#### Data type
+
+* Number
+
+* String 
+* Binary
 
 #### Primary keys
 
@@ -45,11 +54,9 @@ code: N/A
 
 * Cannot be changed
 
-* Partition key: which partition should be written to
+* Partition key: which partition should be written to, also known as Hash
 
-  Sort key: How data should be sorted on partition
-
-  Data type: Number, String, and Binary
+  Sort key: How data should be sorted on partition, also known as Range
 
 * Using only partition key: Simple primary key
 
@@ -90,6 +97,9 @@ code: N/A
   * Query is much effecient
   * Take longer time as the growth of table
   * Single scan can burn all provisioned throughput
+* DB should be design in such way that primary access pattern do not use scans
+* Scan should be needed sparingly, like infrequent report
+* One of the most expensive ways to access data in DynamoDB
 
 #### Provisioned Capacity
 
@@ -161,6 +171,7 @@ code: N/A
   * Sent in batch
   * Near real-time
   * Stream records appear in the same sequence as the actual modifications
+* Do not consume RCUs
 
 #### Errors
 
@@ -195,3 +206,34 @@ code: N/A
   => GSI is recommended over LSI (?)
 
 #### DynamoDB Accelerator (DAX)
+
+![](https://images.viblo.asia/42c3315e-92b3-46d7-8e7a-4d2f04764fe3.png)
+
+* DAX Cluster: One or more nodes
+  * 1 primary node
+  * Additional nodes serve as read replicas
+* Fast response 
+  * DynamoDB: can be single-digit milliseconds
+  * With DAX: microseconds
+* Reads are eventually consistent 
+
+* Good for:
+  * Apps requires fastest response as possible
+  * Read a small number of times more oftenly than others
+  * Read-intensive, but cost-sensitive
+  * Repeat reads against a larget set of data
+* NG for:
+  * requires strongly consistent reads
+  * Write-intensive
+  * Consider using ElastiCache
+
+#### CLI
+
+* `put-item` replace exist item, or add new item
+* `update-item` update exist item, or add new
+* `batch-get-item` get multiple items, up to 16MB of data, which contains as many as 100 items
+* `batch-write-item` put/delete multiple items, up to 16MB of data, which comprise as many as 25 put or delete request. Invidual item to be written can be as large as 400KB
+
+#### Practical note:
+
+TODO:
