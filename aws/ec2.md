@@ -3,8 +3,9 @@ title: AWS EC2
 code: N/A
 ---
 
+* Elastic Compute Cloud
 * General purpose instance types:
-
+* Usecase: Web servers
   * Mac: Mac machine to build/test/develop iOS app
   * T4g:
 
@@ -72,9 +73,13 @@ code: N/A
     * EBS-optimized by default
     * AWS Nitro System
 * Compute optimized: C instances
+  * Usecase: scientific modeling, dedicated game servers, and server engines
 * Memory optimized: R, X instances
+  * Usecase: real-time big data analytics, in-memory cache, in-memory databases
 * Accelerated computing: P4, P3, P2, Inf1, G4dn, G4ad, G3, F1
+  * Usecase: machine learning, speech recognization, compute finance, ...
 * Storage optimized: I, D, H instances
+  * Usecase: NoSQL, in-memory or transaction databases, data warehouse, ...
 * Burstable
   * Burstable: 
     * Traditional Amazon EC2 instance types provide fixed CPU utilization, while burstable performance instances provide a baseline level of CPU utilization with the ability to burst CPU utilization above the baseline level. 
@@ -88,5 +93,28 @@ code: N/A
   * Unlimited mode: 
     * A burstable performance instance configured as `unlimited` can sustain high CPU utilization for any period of time whenever required.
     * Charges might apply if your average utilization over a rolling 24-hour period exceeds the baseline utilization of the instance.
-
 * All instances use ECC RAM
+
+* Instance Profile
+  * Recommend over embeded credentials
+  * IAM Policy ---> IAM Role ---> Instance profile <--- EC2 Instance
+* Placement groups:
+  * Are logical placement
+  * Cluster: 
+    * Pack instances together inside a AZ
+    * Low-latency for tightly coupled note-to-node communication
+    * Cannot be multi AZ
+    * Well suited for HPC applications
+  * Partition:
+    * Spread across logical partitions (inside a AZ ?)
+    * Each partition does not share the same hardware with each other (rack per partition)
+    * Well suited for distributed and replicated workloads
+  * Spread
+    * Each instance is placed on a different rack
+    * Critical instances should be keep seperated from each other
+    * Up to 7 instances
+    * Can be multi AZ
+* User data: Is a script that run when lauching an instance
+  * `curl http://169.254.169.254/latest/user-data`
+* Metadata
+  * `curl http://169.254.169.254/latest/meta-data`
