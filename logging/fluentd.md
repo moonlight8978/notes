@@ -88,5 +88,6 @@
   sudo vim /usr/lib/systemd/system/td-agent.service
   ```
 
-  
+* Workaround when combine with logrotate
 
+  https://github.com/common-voice/common-voice/pull/848/files

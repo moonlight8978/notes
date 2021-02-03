@@ -14,6 +14,7 @@
 - DynamoDB practical note
 - Parameter Store Code
 - KMS & rails integration
+- VPC Endpoints: Internet endpoints & Gateway endpoints
 
 # Links
 
