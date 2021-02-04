@@ -1,3 +1,10 @@
+---
+title: Fluentd
+code: https://github.com/moonlight8978/rails-exploration/tree/logging
+---
+
+
+
 #### Overview
 
 * Basic flow: Input => Filter => Output
@@ -91,3 +98,30 @@
 * Workaround when combine with logrotate
 
   https://github.com/common-voice/common-voice/pull/848/files
+  
+  * Add `flush_at_shutdown true` to output plugin buffer
+  
+  * Stop fluentd to upload current progress, then remove the pos and restart fluentd to tail the log file from the beginning
+  
+  ```txt
+  /root/rails-exploration/log/production.log {
+    prerotate
+      /bin/systemctl stop td-agent
+    endscript
+  
+    daily
+    missingok
+    rotate 7
+    compress
+    delaycompress
+    notifempty
+    copytruncate
+  
+    postrotate
+      /bin/rm -f /var/log/td-agent/*.pos
+      /bin/systemctl start td-agent
+    endscript
+  }
+  ```
+  
+  
