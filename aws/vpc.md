@@ -76,5 +76,42 @@ code: N/A
 * Is a gateway that is a target for a specific route in route table
 * Only supports S3 and DynamoDB
 
+#### Security Group
 
+* Virtual firewall that controls the traffic to and from EC2 instances
+
+* There are no Deny rules. All traffic is blocked by default
+
+* Inbound: Traffic from the internet to the instances
+
+  Outbound: Traffic from instances to the internet
+
+  **STATEFUL**: Traffic which is allowed inbound it is also allowed outbound
+
+* Multiple instances across multiple subnets can belong to a security group
+* Multiple security groups can be attached to single instance
+* Security rule's traffic source can be IP range, a specific IP, or a security group
+* Limitation
+  * Up to 10.000 Security Groups per Region (default is 2500)
+  * Up to 60 inbound rules, and 60 outbound rules per security group
+  * Up to 16 security groups per ENI (default is 5)
+
+* NACL is required to block specific IP addresses
+
+#### Network Access Control List (NACL)
+
+* Use to block/allow traffic from IP range, or a specific IP address to subnet
+* Each subnet can only be associated with 1 NACL at a time
+* Rule number determines the order of evaluation, from lowest to highest  
+  * Max is 32766
+  * Recommended to work in 10 or 100 increments
+* **STATELESS**: Incoming rule will not be applied to the outgoing
+
+#### Practical notes
+
+* VPC:
+  * DNS hostname will be disabled by default. Enable this will create DNS name for instance 
+* Internet Gateway will be associated with VPC, and be set as target in Route Table
+* Subnet:
+  * Enable auto IPv4 assignment, combine with Security Group will eliminate the require of NAT
 

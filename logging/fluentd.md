@@ -3,8 +3,6 @@ title: Fluentd
 code: https://github.com/moonlight8978/rails-exploration/tree/logging
 ---
 
-
-
 #### Overview
 
 * Basic flow: Input => Filter => Output
