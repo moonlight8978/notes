@@ -116,5 +116,6 @@ code: N/A
     * Can be multi AZ
 * User data: Is a script that run when lauching an instance
   * `curl http://169.254.169.254/latest/user-data`
+  * User data is executed as `root` by default
 * Metadata
   * `curl http://169.254.169.254/latest/meta-data`

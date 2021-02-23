@@ -257,3 +257,30 @@ WaitCondition:
 * `WaitCondition` is similar to `CreationPolicy` for EC2, and ASG
   * CreationPolicy: waits onthe dependent resources
   * WaitCondition: waits on the wait conditoin (external)
+
+#### Practical notes:
+
+- Template file should be stored at S3
+- Stack options which can be configured during creation:
+  - Permission: IAM role for CloudFormation to perform CRUD resources in the stack. Default to current user credentials
+  - Stack Policy: Same structure as IAM policy. Defines the resources that will be protected during updates
+  - Rollback config: After the operation complete, CloudFormation can watch for specific alarm (CloudWatch event), and rollback the stack if and alarm threshold exceeds.
+  - Notification: through SNS
+  - Stack creation options:
+    - Rollback on failure: Enabled/Disabled
+    - Timeout
+    - Termination protection
+
+* `yarn add cfn-lint`, `yarn cfn-lint validate ./path-to-template` to validate the template file
+
+#### TODO
+
+Deploy a project using: 
+
+* ruby on rails, nginx, puma (using traditional deployment)
+* bastion host
+* redis
+* mysql
+* s3 bucket
+* vpc, subnet, ...
+* auto scaling group
