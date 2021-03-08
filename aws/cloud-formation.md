@@ -272,6 +272,7 @@ WaitCondition:
     - Termination protection
 
 * `yarn add cfn-lint`, `yarn cfn-lint validate ./path-to-template` to validate the template file
+* When instance is stopped/started manually, the output instance IP will be outdated
 
 #### TODO
 
