@@ -1,7 +1,7 @@
 #### Install
 
 ```bash
-yarn adwd react-native-vector-icons
+yarn add react-native-vector-icons
 ```
 
 #### iOS
